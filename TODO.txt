@@ -1,0 +1,6 @@
+- [ ] Connect to a database
+- [ ] Create a starting window with login/create account functionality
+- [ ] Ensure that the login functionality is connected to the database
+- [ ] Implement the "Start Game" feature
+- [ ] Implement the "Show Stats" feature
+- [ ] Implement the "Quit" feature
