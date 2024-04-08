@@ -15,9 +15,20 @@ class Game:
     and password. If the user has entered a username that already exists
     in the database, the user is prompted to enter a unique username.
     """
-    def register_new_user(self):
+    def register_new_user(self, username, password):
         print("Registering new user..")
-        
+        try:
+            # see if the database has a user with the same username
+            # if not, add the user to the database
+            self.db_manager.connect()
+            self.db_manager.add_user(username, password)
+            status = True
+        except Exception as e:
+            status = False
+            print(f"Error: {e}")
+        finally:
+            self.db_manager.disconnect()
+            return status
         # self.db_manager.connect()
         # self.db_manager.add_user("test", "test")
         # self.db_manager.disconnect()
