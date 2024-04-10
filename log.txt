@@ -1,0 +1,9 @@
+2024-04-10 19:05:05: Connected to MySQL Server version 8.3.0
+2024-04-10 19:05:05: Error: 1062 (23000): Duplicate entry 'nick' for key 'user_credentials.username'
+2024-04-10 19:05:05: Connection to MySQL is closed
+2024-04-10 19:05:05: User registration for <nick> failed.
+2024-04-10 19:06:17: Connected to MySQL Server version 8.3.0
+2024-04-10 19:06:17: User <nick345> added to database
+2024-04-10 19:06:17: Connection to MySQL is closed
+2024-04-10 19:06:17: User <nick345> registered successfully.
+2024-04-10 19:09:27: Quitting the game

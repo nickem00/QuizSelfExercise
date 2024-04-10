@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import font
 from PIL import Image, ImageTk
 import game
+import log_writer
+import time
 
 class GUI:
 
@@ -12,16 +14,16 @@ class GUI:
         self.root.geometry("500x650+950+100")
         self.root.resizable(False, False)
         self.root.config(bg="#755035")
-        self.icon_url = ("C:/Users/nicke/IdeaProjects" +
-                         "/QuizSelfExercise/assets/media/icon.ico")
+        self.icon_url = ("../assets/media/icon.ico")
+        # C:/users/nicke/IdeaProjects/QuizSelfExercise/assets/media/icon.ico
         self.root.iconbitmap(self.icon_url)
-        self.main_menu()
+        self.login_screen()
+        self.log_writer = log_writer.Log_writer()
 
-    def main_menu(self):
+    def login_screen(self):
         self.custom_font = font.Font(family="Impact", size=60, weight="bold")
 
-        self.title_url = ("C:/Users/nicke/IdeaProjects" +
-                            "/QuizSelfExercise/assets/media/title.png")
+        self.title_url = ("../assets/media/title.png")
         self.title_image = ImageTk.PhotoImage(Image.open(self.title_url)
                                               .resize(
                                                (500, 200), Image.Resampling.
@@ -29,7 +31,7 @@ class GUI:
         self.title_label = tk.Label(self.root, image=self.title_image)
         self.title_label.image = self.title_image
         self.title_label.place(x=0, y=50, relwidth=1, relheight=0.3)
-        
+
         self.button_frame = tk.Frame(self.root, bg="#755035")
         self.button_frame.columnconfigure(0, weight=1)
         self.button_frame.columnconfigure(1, weight=1)
@@ -49,14 +51,18 @@ class GUI:
                                       width=10,
                                       command=self.game.login_user)
         self.login_button.grid(row=0, column=1)
-        self.button_frame.place(x=0, y=300, relwidth=1, relheight=0.3)
+        self.button_frame.place(x=0, y=300, relwidth=1, relheight=0.15)
         self.quit_button = tk.Button(self.root,
                                      text="Quit",
                                      font=("Impact", 30),
                                      bg="#b32700",
                                      fg="#000000",
-                                     command=self.root.quit)
+                                     command=self.quit)
         self.quit_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+    
+    def quit(self):
+        self.log_writer.write_log("Quitting the game")
+        self.root.quit()
 
     def register_screen(self):
         
@@ -107,25 +113,58 @@ class GUI:
                                      bg="#FFD700",
                                      fg="#000000",
                                      width=10,
-                                     command=self.back_button_from_registration)
+                                     command=self.back_from_registration)
         self.back_button.grid(row=0, column=0)
         self.submit_button.grid(row=0, column=1)
         self.registation_buttons_frame.place(x=0, y=500, relwidth=1, relheight=0.3)
         
-    def back_button_from_registration(self):
+    def back_from_registration(self):
+        if hasattr(self, "error_message_label"):
+            self.error_message_label.place_forget()
         self.registation_buttons_frame.place_forget()
         self.registration_frame.place_forget()
         self.username_entry_label.place_forget()
         self.password_entry_label.place_forget()
-        self.main_menu()
+        self.login_screen()
+    
+    def successful_registration(self):
+        self.registation_buttons_frame.place_forget()
+        self.registration_frame.place_forget()
+        self.username_entry_label.place_forget()
+        self.password_entry_label.place_forget()
+        
+        self.successful_registration_label = tk.Label(self.root,
+                                                      text="Registration successful",
+                                                      font=("Impact", 20),
+                                                      bg="#755035",
+                                                      fg="#23eb00")
+        self.successful_registration_label.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+        self.login_screen()
     
     def sumbit_registration_button(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
         print(f"Username: {username}, Password: {password}")
-        if self.game.register_new_user(username, password):
+        successfull = self.game.register_new_user(username, password)
+        if successfull is True:
             print("User registered successfully")
+            self.log_writer.write_log(f"User <{username}> registered "
+                                      "successfully.")
+            
+            self.successful_registration()
         else:
             print("User registration failed")
+            self.log_writer.write_log("User registration "
+                                      f"for <{username}> failed.")
+            self.show_error_message("Username already exists or is invalid.\n"
+                                    "Please choose another.")
+    
+    def show_error_message(self, message):
+        self.error_message_label = tk.Label(self.root,
+                                           text=message,
+                                           font=("Arial", 15),
+                                           bg="#755035",
+                                           fg="#FF0000")
+        self.error_message_label.place(relx=0.5, rely=0.70, anchor=tk.CENTER)
         
         

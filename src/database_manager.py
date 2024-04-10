@@ -1,4 +1,6 @@
 import mysql.connector
+import log_writer
+
 
 class DatabaseManager:
     def __init__(self):
@@ -9,18 +11,22 @@ class DatabaseManager:
             "database": "quiz_game"
         }
         self.connection = None
-    
+        self.log_writer = log_writer.Log_writer()
+
     def add_user(self, username, password):
+        cursor = self.connection.cursor()
         try:
-            cursor = self.connection.cursor()
-            cursor.execute("INSERT INTO user_credentials (username, password) VALUES (%s, %s)", (username, password))
+            cursor.execute(f"INSERT INTO user_credentials (username, password) "
+                           f"VALUES ('{username}', '{password}')")
             self.connection.commit()
-            print(f"Användare {username} har lagts till i databasen")
+            print(f"User <{username}> added to database")
+            self.log_writer.write_log(f"User <{username}> added to database")
         except mysql.connector.Error as e:
-            print("Fel vid tillägg av användare: ", e)
+            print(f"Error: {e}")
+            self.log_writer.write_log(f"Error: {e}")
+            raise e
         finally:
             cursor.close()
-            
 
     def connect(self):
         try:
@@ -28,10 +34,14 @@ class DatabaseManager:
             if self.connection.is_connected():
                 db_info = self.connection.get_server_info()
                 print("Ansluten till MySQL Server version ", db_info)
+                self.log_writer.write_log(f"Connected to MySQL Server version "
+                                          f"{db_info}")
         except mysql.connector.Error as e:
             print("Fel vid anslutning till MySQL: ", e)
+            self.log_writer.write_log(f"Error while connecting to MySQL: {e}")
 
     def disconnect(self):
         if self.connection.is_connected():
             self.connection.close()
             print("Anslutningen till MySQL är stängd")
+            self.log_writer.write_log("Connection to MySQL is closed")

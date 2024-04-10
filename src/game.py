@@ -22,13 +22,13 @@ class Game:
             # if not, add the user to the database
             self.db_manager.connect()
             self.db_manager.add_user(username, password)
-            status = True
+            successfull = True
         except Exception as e:
-            status = False
+            successfull = False
             print(f"Error: {e}")
         finally:
             self.db_manager.disconnect()
-            return status
+            return successfull
         # self.db_manager.connect()
         # self.db_manager.add_user("test", "test")
         # self.db_manager.disconnect()
