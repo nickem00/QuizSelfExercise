@@ -1,9 +1,11 @@
 import database_manager
+import log_writer
 
 class Game:
 
     def __init__(self):
         self.db_manager = database_manager.DatabaseManager()
+        self.log_writer = log_writer.Log_writer()
 
     """
     This method is called when the user clicks the "Register" button
@@ -33,8 +35,37 @@ class Game:
         # self.db_manager.add_user("test", "test")
         # self.db_manager.disconnect()
 
-    def login_user(self):
-        print("Login user")
+    """
+    A method that logs the user into the game.
+
+    The method takes a username and password as arguments and checks
+    whether the username and password match the username and password
+    in the database. If the username and password match, the method returns
+    True. If the username and password do not match, the method returns False.
+    """
+    def login_user(self, username, password):
+        print(f"Trying to log in user {username}..")
+        self.log_writer.write_log(f"Trying to log in user {username}..")
+        try:
+            self.db_manager.connect()
+            user = self.db_manager.get_user(username)
+            if user is None:
+                print(f"User {username} not found.")
+                self.log_writer.write_log(f"User {username} not found.")
+                return False
+            if user[1] == password:
+                print(f"User {username} logged in.")
+                self.log_writer.write_log(f"User {username} logged in.")
+                return True
+            else:
+                print(f"Worng password entered for user {username}.")
+                self.log_writer.write_log(f"Wrong password entered for user {username}.")
+                return False
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            self.db_manager.disconnect()
+        return False
 
     def start_game(self):
         pass

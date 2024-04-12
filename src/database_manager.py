@@ -45,3 +45,16 @@ class DatabaseManager:
             self.connection.close()
             print("Anslutningen till MySQL är stängd")
             self.log_writer.write_log("Connection to MySQL is closed")
+
+    def get_user(self, username):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(f"SELECT * FROM user_credentials WHERE username = '{username}'")
+            user = cursor.fetchone()
+            return user
+        except mysql.connector.Error as e:
+            print(f"Error: {e}")
+            self.log_writer.write_log(f"Error: {e}")
+            raise e
+        finally:
+            cursor.close()

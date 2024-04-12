@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import game
 import log_writer
 import time
+import login_gui
 
 class GUI:
 
@@ -49,7 +50,7 @@ class GUI:
                                       bg="#FFD700",
                                       fg="#000000",
                                       width=10,
-                                      command=self.game.login_user)
+                                      command=self.user_login)
         self.login_button.grid(row=0, column=1)
         self.button_frame.place(x=0, y=300, relwidth=1, relheight=0.15)
         self.quit_button = tk.Button(self.root,
@@ -59,17 +60,17 @@ class GUI:
                                      fg="#000000",
                                      command=self.quit)
         self.quit_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
-    
+
     def quit(self):
         self.log_writer.write_log("Quitting the game")
         self.root.quit()
 
     def register_screen(self):
-        
+
         # Hide the main menu buttons
         self.button_frame.place_forget()
         self.quit_button.place_forget()
-        
+
         # Create the registration frame
         self.registration_frame = tk.Frame(self.root, bg="#755035")
         self.username_entry = tk.Entry(self.registration_frame,
@@ -80,7 +81,7 @@ class GUI:
         self.username_entry.grid(row=0, column=0, pady=(0, 40))
         self.password_entry.grid(row=1, column=0, pady=(0, 40))
         self.registration_frame.place(x=0, y=300, relwidth=1, relheight=0.3)
-        
+
         # Create the registration labels
         self.username_entry_label = tk.Label(self.root,
                                              text="Username",
@@ -94,7 +95,7 @@ class GUI:
                                              fg="#FFD700")
         self.username_entry_label.place(x=104, y=266)
         self.password_entry_label.place(x=104, y=346)
-        
+
         # Create the registration buttons
         self.registation_buttons_frame = tk.Frame(self.root,
                                                   bg="#755035")
@@ -117,7 +118,7 @@ class GUI:
         self.back_button.grid(row=0, column=0)
         self.submit_button.grid(row=0, column=1)
         self.registation_buttons_frame.place(x=0, y=500, relwidth=1, relheight=0.3)
-        
+
     def back_from_registration(self):
         if hasattr(self, "error_message_label"):
             self.error_message_label.place_forget()
@@ -126,13 +127,13 @@ class GUI:
         self.username_entry_label.place_forget()
         self.password_entry_label.place_forget()
         self.login_screen()
-    
+
     def successful_registration(self):
         self.registation_buttons_frame.place_forget()
         self.registration_frame.place_forget()
         self.username_entry_label.place_forget()
         self.password_entry_label.place_forget()
-        
+
         self.successful_registration_label = tk.Label(self.root,
                                                       text="Registration successful",
                                                       font=("Impact", 20),
@@ -140,7 +141,7 @@ class GUI:
                                                       fg="#23eb00")
         self.successful_registration_label.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
         self.login_screen()
-    
+
     def sumbit_registration_button(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
@@ -150,7 +151,7 @@ class GUI:
             print("User registered successfully")
             self.log_writer.write_log(f"User <{username}> registered "
                                       "successfully.")
-            
+
             self.successful_registration()
         else:
             print("User registration failed")
@@ -158,7 +159,7 @@ class GUI:
                                       f"for <{username}> failed.")
             self.show_error_message("Username already exists or is invalid.\n"
                                     "Please choose another.")
-    
+
     def show_error_message(self, message):
         self.error_message_label = tk.Label(self.root,
                                            text=message,
@@ -166,5 +167,6 @@ class GUI:
                                            bg="#755035",
                                            fg="#FF0000")
         self.error_message_label.place(relx=0.5, rely=0.70, anchor=tk.CENTER)
-        
-        
+
+    def user_login(self):
+        login_gui.Login_GUI(self.root, self.game)
