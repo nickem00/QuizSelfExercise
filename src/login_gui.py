@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import font
+# from tkinter import font
 from PIL import Image, ImageTk
 import database_manager
 import log_writer
@@ -25,7 +25,7 @@ class Login_GUI:
         # hide the previous screen
         self.background = tk.Label(self.root, bg="#755035")
         self.background.place(x=0, y=0, relwidth=1, relheight=1)
-        
+
         self.title_url = ("../assets/media/title.png")
         self.title_image = ImageTk.PhotoImage(Image.open(self.title_url)
                                               .resize(
@@ -34,7 +34,6 @@ class Login_GUI:
         self.title_label = tk.Label(self.root, image=self.title_image)
         self.title_label.image = self.title_image
         self.title_label.place(x=0, y=50, relwidth=1, relheight=0.3)
-        
 
         # Create the login frame
         self.login_frame = tk.Frame(self.root, bg="#755035")
@@ -86,7 +85,7 @@ class Login_GUI:
 
     def back_button(self):
         self.hide_login_screen()
-    
+
     def hide_login_screen(self):
         self.login_frame.place_forget()
         self.username_entry_label.place_forget()

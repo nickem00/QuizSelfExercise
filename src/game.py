@@ -1,6 +1,7 @@
 import database_manager
 import log_writer
 
+
 class Game:
 
     def __init__(self):
@@ -53,7 +54,7 @@ class Game:
                 print(f"User {username} not found.")
                 self.log_writer.write_log(f"User {username} not found.")
                 return False
-            if user[1] == password:
+            if user[2] == password:
                 print(f"User {username} logged in.")
                 self.log_writer.write_log(f"User {username} logged in.")
                 return True

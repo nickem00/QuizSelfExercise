@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import font
 from PIL import Image, ImageTk
-import game
+# import game
 import log_writer
-import time
+# import time
 import login_gui
+
 
 class GUI:
 
@@ -162,10 +163,10 @@ class GUI:
 
     def show_error_message(self, message):
         self.error_message_label = tk.Label(self.root,
-                                           text=message,
-                                           font=("Arial", 15),
-                                           bg="#755035",
-                                           fg="#FF0000")
+                                            text=message,
+                                            font=("Arial", 15),
+                                            bg="#755035",
+                                            fg="#FF0000")
         self.error_message_label.place(relx=0.5, rely=0.70, anchor=tk.CENTER)
 
     def user_login(self):
